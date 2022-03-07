@@ -1,8 +1,11 @@
 const Discord = require("discord.js");
+// require("dotenv").config();
 require("dotenv").config();
 
+const botLogsId = "946769680163536947";
+
 const client = new Discord.Client({
-  intents: ["GUILDS", "GUILD_MESSAGES"],
+  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"],
 });
 
 client.on("ready", () => {
@@ -15,6 +18,10 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.login(process.env.TOKEN);
+client.on("guildMemberAdd", (member) => {
+  member.guild.channels.cache
+    .get(botLogsId)
+    .send(`<@${member.id}> Welcome to the server!`);
+});
 
-// https://github.com/StruberryPie/struberrypie-bot.git
+client.login(process.env.TOKEN);
