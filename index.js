@@ -1,8 +1,7 @@
 const Discord = require("discord.js");
-// require("dotenv").config();
 require("dotenv").config();
 
-const botLogsId = "946769680163536947";
+const imageWelcome = require("./imageWelcome");
 
 const client = new Discord.Client({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS"],
@@ -18,10 +17,14 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.on("guildMemberAdd", (member) => {
-  member.guild.channels.cache
-    .get(botLogsId)
-    .send(`<@${member.id}> Welcome to the server!`);
+const botLogsId = "946769680163536947";
+
+client.on("guildMemberAdd", async (member) => {
+  const img = await imageWelcome(member);
+  member.guild.channels.cache.get(botLogsId).send({
+    content: `<@${member.id}> Welcome to the server!`,
+    files: [img],
+  });
 });
 
 client.login(process.env.TOKEN);
