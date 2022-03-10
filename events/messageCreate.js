@@ -9,13 +9,6 @@ module.exports = {
     let command = client.commands.get(cmdString);
     let member = message.member;
 
-    // test-box==================================================
-
-    // if (command === undefined) {
-    //   return console.log("Stru Error");
-    // }
-
-    // test-box==================================================
     if (!message.guild) {
       return;
     }
