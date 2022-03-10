@@ -20,6 +20,10 @@ module.exports = (bot, reload) => {
       console.log(`${index + 1}. ${file} loaded`);
     }
   });
+
+  if (!reload) {
+    initEvents(bot);
+  }
 };
 
 function triggerEventHandler(bot, event, ...args) {
@@ -36,10 +40,14 @@ function triggerEventHandler(bot, event, ...args) {
   }
 }
 
-function iniitEvents(bot) {
+function initEvents(bot) {
   const { client } = bot;
 
   client.on("ready", () => {
     triggerEventHandler(bot, "ready");
+  });
+
+  client.on("messageCreate", (message) => {
+    triggerEventHandler(bot, "messageCreate", message);
   });
 }
