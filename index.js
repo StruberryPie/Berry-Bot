@@ -1,4 +1,5 @@
 const Discord = require("discord.js");
+
 require("dotenv").config();
 
 // ---------------------------------------------------------------------
@@ -26,6 +27,34 @@ client.loadCommands = (bot, reload) =>
 
 client.loadEvents(bot, false);
 client.loadCommands(bot, false);
+
+client.slashCommands = new Discord.Collection();
+
+client.loadSlashCommands = (bot, reload) =>
+  require("./handlers/slashCommands")(bot, reload);
+client.loadSlashCommands(bot, false);
+
+client.on("interactionCreate", (interaction) => {
+  if (!interaction.isCommand()) {
+    return;
+  }
+
+  if (!interaction.inGuild()) {
+    return interaction.reply("This command can only be used in a server");
+  }
+
+  const slashCmd = client.slashCommands.get(interaction.commandName);
+
+  if (!slashCmd) {
+    return interaction.reply("Invaild slash command");
+  }
+
+  if (slashCmd.perm && !interaction.member.permissions.has(slashCmd.perm)) {
+    return interaction.reply("You do not have permission for this command");
+  }
+
+  slashCmd.run(client, interaction);
+});
 
 module.exports = bot;
 
