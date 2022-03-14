@@ -7,3 +7,15 @@ const getFiles = (path, ending) => {
 module.exports = {
   getFiles,
 };
+
+// copy-------------------------------------------------
+
+// const fs = require("fs")
+
+// const getFiles = (path, ending) => {
+//     return fs.readdirSync(path).filter(f=> f.endsWith(ending))
+// }
+
+// module.exports = {
+//     getFiles
+// }
