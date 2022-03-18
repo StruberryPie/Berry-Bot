@@ -6,4 +6,4 @@
 
 **Bot On**
 
-- ts-node index.ts
+- npm run dev

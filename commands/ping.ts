@@ -13,7 +13,7 @@ export default {
 } as ICommand
 
 // ------------------------------------------------------------
-// long version of the reply for both slash and legacy commands
+// long version of the reply for both commands
 
 //     callback: ({ message, interaction }) => {
 //         if (message) {
