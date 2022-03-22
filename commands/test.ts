@@ -48,12 +48,16 @@ export default {
             time: 1000 * 15
         })
 
+        // Broken =======================================================
+
         // collector.on('collect', (i: Interaction) => {
         //     i.reply({
         //         content: 'Button clicked!',
         //         ephemeral: true
         //     })
         // })
+
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
         collector.on('end', async (collection) => {
             collection.forEach((click) => {
