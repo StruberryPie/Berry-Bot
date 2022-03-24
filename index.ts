@@ -22,6 +22,7 @@ client.on('ready', () => {
         typeScript: true,
         // server/guild ID
         testServers: ['910179167251882014'],
+        botOwners: ['328619106058108938'],
         mongoUri: process.env.MONGO_URI,
     })
 })
