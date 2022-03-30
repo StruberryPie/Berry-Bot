@@ -4,7 +4,7 @@ import punishmentSchema from '../models/punishment-schema';
 
 export default {
     category: 'Moderation',
-    description: 'bans a user.',
+    description: 'Mutes a user.',
 
     permissions: ['ADMINISTRATOR'],
     requireRoles: true,
@@ -16,7 +16,14 @@ export default {
     slash: 'both',
     testOnly: true,
 
-    callback: async ({ args, member: staff, guild, client, message, interaction, }) => {
+    callback: async ({
+        args,
+        member: staff,
+        guild,
+        client,
+        message,
+        interaction,
+    }) => {
         if (!guild) {
             return 'You can only use this in a server.'
         }
@@ -27,8 +34,10 @@ export default {
         let user: User | undefined
 
         if (message) {
+            // Legacy command
             user = message.mentions.users?.first()
         } else {
+            // Slash command
             user = interaction.options.getUser('user') as User
         }
 
@@ -49,7 +58,7 @@ export default {
             const split = duration.match(/\d+\D+/g)
             time = parseInt(split![0])
             type = split![1].toLocaleLowerCase()
-        } catch (e){
+        } catch (e) {
             return "Invalid time format! Example format: \"10d\" where 'd' = days, 'h' = hours and 'm' = minutes."
         }
 
@@ -67,14 +76,22 @@ export default {
         const result = await punishmentSchema.findOne({
             guildId: guild.id,
             userId,
-            type: 'ban',
+            type: 'mute',
         })
         if (result) {
-            return `<@${userId}> is already banned in this server.`
+            return `<@${userId}> is already muted in this server.`
         }
 
         try {
-            await guild.members.ban(userId, {days: 7, reason })
+            const member = await guild.members.fetch(userId)
+            if (member) {
+                const muteRole = guild.roles.cache.find((role) => role.name === 'Muted')
+                if (!muteRole) {
+                    return 'This server does not have a "Muted" role.'
+                }
+
+                member.roles.add(muteRole)
+            }
 
             await new punishmentSchema({
                 userId,
@@ -82,66 +99,12 @@ export default {
                 staffId: staff.id,
                 reason,
                 expires,
-                type: 'ban',
+                type: 'mute',
             }).save()
         } catch (ignored) {
-            return 'Cannot ban that user'
+            return 'Cannot mute that user'
         }
 
-        return `<@${userId}> has been banned for "${duration}"`
+        return `<@${userId}> has been muted for "${duration}"`
     },
 } as ICommand
-
-// Older Ban Code ================================================================
-
-// import { GuildMember } from "discord.js";
-// import { ICommand } from "wokcommands";
-
-// export default {
-//     category: 'Moderation',
-//     description: 'Bans a user',
-
-//     // permissions: ['ADMINISTRATOR'],
-//     requireRoles: true,
-
-//     slash: 'both',
-//     testOnly: true,
-
-//     guildOnly: true,
-
-//     minArgs: 2,
-//     expectedArgs: '<user> <reason>',
-//     expectedArgsTypes: ['USER', 'STRING'],
-
-//     callback: ({ message, interaction, args }) => {
-//         const target = message ? message.mentions.members?.first() : interaction.options.getMember('user') as GuildMember
-//         if (!target) {
-//             return 'Please tag someone to ban.'
-//         }
-
-//         if (!target.bannable) {
-//             return {
-//                 custom: true,
-//                 content: "Cannot ban that user.",
-//                 ephemeral: true,
-//             }
-//         }
-
-//         args.shift()
-//         const reason = args.join(' ')
-
-//         target.ban({
-//             reason,
-//             // days of messages to delete
-//             days: 7
-//         })
-
-//         return {
-//             custom: true,
-//             content: `You banned <@${target.id}>`,
-//             ephemeral: true,
-//         }
-//     }
-// } as ICommand
-
-// Older Ban Code ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
