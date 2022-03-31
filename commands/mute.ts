@@ -55,7 +55,7 @@ export default {
         let time
         let type
         try {
-            const split = duration.match(/\d+\D+/g)
+            const split = duration.match(/\d+|\D+/g)
             time = parseInt(split![0])
             type = split![1].toLocaleLowerCase()
         } catch (e) {

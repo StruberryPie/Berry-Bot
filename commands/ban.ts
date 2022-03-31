@@ -1,3 +1,5 @@
+// Temp Ban Code ================================================================
+
 import { User } from 'discord.js'
 import { ICommand } from "wokcommands";
 import punishmentSchema from '../models/punishment-schema';
@@ -46,7 +48,7 @@ export default {
         let time
         let type
         try {
-            const split = duration.match(/\d+\D+/g)
+            const split = duration.match(/\d+|\D+/g)
             time = parseInt(split![0])
             type = split![1].toLocaleLowerCase()
         } catch (e){
@@ -92,7 +94,9 @@ export default {
     },
 } as ICommand
 
-// Older Ban Code ================================================================
+// Temp Ban Code ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+// Perm Ban Code ================================================================
 
 // import { GuildMember } from "discord.js";
 // import { ICommand } from "wokcommands";
@@ -144,4 +148,4 @@ export default {
 //     }
 // } as ICommand
 
-// Older Ban Code ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// Perm Ban Code ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -19,7 +19,7 @@ export default (client: Client) => {
         }
     })
 
-    const check =async () => {
+    const check = async () => {
         const query = {
             expires: { $lt: new Date() },
         }
